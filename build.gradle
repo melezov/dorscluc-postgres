@@ -1,0 +1,13 @@
+apply plugin: 'java'
+apply plugin: 'application'
+
+repositories {
+  mavenCentral()
+}
+  
+dependencies {
+  compile 'org.revenj:revenj-core:0.9.7'
+  compile files('libs/dorscluc-model.jar')
+}
+
+mainClassName = "dorscluc.Main"
