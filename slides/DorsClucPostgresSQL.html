@@ -1,0 +1,1523 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>DORS/CLUC - PostgreSQL</title>
+
+		<meta name="description" content="Predavanje 13/05/2016">
+		<meta name="author" content="Marko Elezović">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+		<div class="reveal">
+			<div class="slides">
+				<section>
+					<section>
+						<h1>Typesafe NoSQL</h1>
+						<h2 style="color: yellow;">(u PostgreSQLu)</h2>
+						<img width="20%" height="20%" data-src="img/postgresql-elephant.svg" style="background:none; border:none; box-shadow:none;" alt="PostgreSQL slon logo">
+						<h5>13/05/2016</h5>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h1><a href="http://www.postgresql.org/about/advantages/">Elevator pitch</a></h1>
+						<ul>
+							<li class="fragment">
+								Odrastao:
+								<ul>
+									<li>30+ godina razvoja</li>
+									<li>Stabilan ko Velebit</li>
+								</ul>
+							</li>
+							<li class="fragment">
+								Feature rich:
+								<ul>
+									<li>Besplatan Oracle</li>
+									<li>Tisuće <a href="http://pgfoundry.org/softwaremap/trove_list.php">integracija</a></li>
+								</ul>
+							</li>
+							<li class="fragment">
+								Izvrstan:
+								<ul>
+									<li class="fragment">Fenomenalna <a href="http://www.postgresql.org/docs/9.5/static/index.html">dokumentacija</a></li>
+									<li class="fragment">Izvrsna <a href="https://wiki.postgresql.org/wiki/Main_Page">baza znanja</a></li>
+									<li class="fragment">Entuzijastičan <a href="https://webchat.freenode.net/">community</a></li>
+								</ul>
+							</li>
+					</section>
+
+					<section>
+						<h3>Elevator pitch (advanced)</h3>
+						<ul>
+							<li class="fragment">
+								Skraćenice:
+								<ul>
+									<li>ANSI SQL</li>
+									<li>ACID</li>
+									<li>MVCC</li>
+									<li>SQL/MED</li>
+									<li>Txn DDL</li>
+								</ul>
+							</li>
+							<li class="fragment">
+								Best of both worlds:
+								<ul>
+									<li>Napredna relacijska algebra</li>
+									<li>NoSQL brži od NoSQLa</li>
+									<li>Key-Value storage</li>
+									<li>Typesafe NoSQL</li>
+								</ul>
+							</li>
+					</section>
+				</section>
+
+				<section>
+					<section data-markdown>
+						<script type="text/template">
+# Povijest
+
+* 1982 Michael Stonebraker - post-Ingress
+* 1994 Berkley release pod MIT licencom
+
+![](img/Michael_Stonebraker.jpg)
+
+* POSTQUEL -> Postgres95
+* 1996 - **PostgreSQL**
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+# Verzija 6.0
+## (1996)
+* MVCC
+* Built-in tipovi
+* Foreign Keys
+* Views
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+# Verzija 7.0
+## (2000)
+* Transaction Support
+* Sub-queries
+* WAL
+* Scheme
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+# Verzija 8.0
+### (2005)
+* PITR
+* Role
+* Windows
+* Jezici
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+# Verzija [9.0](https://wiki.postgresql.org/wiki/What's_new_in_PostgreSQL_9.0)
+### (2010)
+* Streaming Replication
+* Hot Standby
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+# Verzija [9.1](https://wiki.postgresql.org/wiki/What's_new_in_PostgreSQL_9.1)
+### (2011)
+* Sinhrona replikacija
+* Collation po kolumnama
+* Unlogged tablice
+* Extenzije
+* SSI
+* Writable CTE
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+# Verzija [9.2](https://wiki.postgresql.org/wiki/What's_new_in_PostgreSQL_9.2)
+### (2012)
+* JSON
+* Index-only scans
+* Ranges
+* Kaskadna replikacija
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+# Verzija [9.3](https://wiki.postgresql.org/wiki/What's_new_in_PostgreSQL_9.3)
+### (2013)
+* Materialized views
+* Parallel dump
+* Background workeri
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+# Verzija [9.4](https://wiki.postgresql.org/wiki/What's_new_in_PostgreSQL_9.4)
+### (2014)
+* JSONB (NoSQL killer)
+* Logical decoding
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+# Verzija [9.5](https://wiki.postgresql.org/wiki/What's_new_in_PostgreSQL_9.5)
+### (2015)
+* Row-Level security
+* BRIN
+* Foreign schema import
+* Foreign inheritance
+* UPSERT support
+* Parallel vacuum
+* pg_rewind
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+# Verzija [9.6](https://wiki.postgresql.org/wiki/NewIn96)
+### (2016)
+* Parallel Query
+* FDW DML
+* Hot backup API
+						</script>
+					</section>
+				</section>
+
+				<section>
+					<section data-transition="none">
+						<h1>Sadašnjost</h1>
+						<h5><img src="img/trend-absolute.png"></h5>
+					</section>
+					<section data-transition="none">
+						<h1>Sadašnjost</h1>
+						<h5><img src="img/trend-relative.png"></h5>
+					</section>
+					<section data-transition="none">
+						<h1>Sadašnjost</h1>
+						<h5><img src="img/db-engines-chart.png"></h5>
+					</section>
+					<section data-transition="none">
+						<h1>Sadašnjost</h1>
+						<h5><img src="img/db-engines-table.png"></h5>
+					</section>
+				</section>
+
+				<section>
+					<section data-transition="none">
+						<h1>Naziv?</h1>
+					</section>
+
+					<section data-transition="none">
+						<h1>Naziv</h1>
+						<h2>poʊstɡrɛs kjuː ɛl</h2>
+						<div class="fragment">
+							<h5>ili</h5>
+							<h2 style="color: limegreen;">poʊstɡrɛs</h2>
+						</div>
+
+						<div class="fragment">
+							<h5>Nikako:</h5>
+							<h2 style="color: salmon;">Pozgre</h2>
+						</div>
+						<h2 class="fragment" style="color: salmon;">Pozgri</h2>
+						<h2 class="fragment" style="color: salmon;">PozgreSiikvl</h2>
+					</section>
+
+					<section data-transition="none">
+						<h1>Naziv</h1>
+						<h2>PostGreskjuEl</h2>
+						<div>
+							<h5>ili</h5>
+							<h2 style="color: limegreen;">Pozgres</h2>
+						</div>
+
+						<div>
+							<h5>Nikako:</h5>
+							<h2 style="color: salmon;">Pozgre</h2>
+						</div>
+						<h2 style="color: salmon;">Pozgri</h2>
+						<h2 style="color: salmon;">PozgreSiikvl</h2>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h1>Logo?</h1>
+					</section>
+
+					<section>
+						<h1>“Slonik”</h1>
+						<img width="20%" height="20%" data-src="img/postgresql-elephant.svg" style="background:none; border:none; box-shadow:none;" alt="PostgreSQL slon logo">
+					</section>
+
+					<section>
+						<h3>Alternativni logo</h3>
+						<img data-src="img/postgresql-turtle.png" style="background:none; border:none; box-shadow:none;" alt="PostgreSQL kornjača logo">
+					</section>
+					<section>
+						<h3>Alternativni logo</h3>
+						<img data-src="img/postgres-2000-turtle.gif">
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h1>U divljini (i oblaku)</h1>
+					</section>
+
+					<section>
+						<h1>Heroku</h1>
+						<table>
+							<thead>
+								<tr>
+									<th>Plan Name</th>
+									<th>Cache Size</th>
+									<th>Storage Limit</th>
+									<th>Conn. Limit</th>
+									<th>Monthly Price</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Standard</td>
+									<td>1 GB</td>
+									<td>64 GB</td>
+									<td>120</td>
+									<td>$50</td>
+								</tr>
+								<tr>
+									<td>Standard</td>
+									<td>3.5 GB</td>
+									<td>256 GB</td>
+									<td>400</td>
+									<td>$200</td>
+								</tr>
+								<tr>
+									<td>Standard</td>
+									<td>15 GB</td>
+									<td>512 GB</td>
+									<td>500</td>
+									<td>$750</td>
+								</tr>
+								<tr>
+									<td>Standard</td>
+									<td>60 GB</td>
+									<td>1 TB</td>
+									<td>500</td>
+									<td>$2000</td>
+								</tr>
+								<tr>
+									<td>Standard</td>
+									<td>120 GB</td>
+									<td>1 TB</td>
+									<td>500</td>
+									<td>$3500</td>
+								</tr>
+							</tbody>
+						</table>
+					</section>
+
+					<section>
+						<h1>Heroku</h1>
+						<table>
+							<thead>
+								<tr>
+									<th>Plan Name</th>
+									<th>Cache Size</th>
+									<th>Storage Limit</th>
+									<th>Connection Limit</th>
+									<th>Monthly Price</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Premium</td>
+									<td>1 GB</td>
+									<td>64 GB</td>
+									<td>120</td>
+									<td>$200</td>
+								</tr>
+								<tr>
+									<td>Premium</td>
+									<td>3.5 GB</td>
+									<td>256 GB</td>
+									<td>400</td>
+									<td>$350</td>
+								</tr>
+								<tr>
+									<td>Premium</td>
+									<td>15 GB</td>
+									<td>512 GB</td>
+									<td>500</td>
+									<td>$1200</td>
+								</tr>
+								<tr>
+									<td>Premium</td>
+									<td>60 GB</td>
+									<td>1 TB</td>
+									<td>500</td>
+									<td>$3500</td>
+								</tr>
+								<tr>
+									<td>Premium</td>
+									<td>120 GB</td>
+									<td>1 TB</td>
+									<td>500</td>
+									<td>$6000</td>
+								</tr>
+							</tbody>
+						</table>
+					</section>
+
+					<section>
+						<h1>Amazon RDS</h1>
+						<img data-src="img/amazon-rds.png" style="background: white;">
+					</section>
+
+					<section>
+						<h1>Amazon Redshift</h1>
+						<img data-src="img/amazon-redshift.png" style="background: white;">
+					</section>
+
+				</section>
+
+				<section>
+					<section data-markdown>
+						<script type="text/template">
+# Što je Postgres?
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+# Database Server
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+Cluster > Baza > Schema > Tablica
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+# Cluster
+## (instalacija)
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+### Prerekviziti (build):
+
+* make
+* gcc / ?
+* tar
+* zlib
+
+* readline
+
+* OpenSSL, OpenLDAP, ...
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+Stvaranje novog clustera:
+
+	sudo pg_createcluster 9.5 demo
+	pg_lsclusters
+
+Default settingsi:
+
+	Creating new cluster 9.5/demo ...
+	  config /etc/postgresql/9.5/demo
+	  data   /var/lib/postgresql/9.5/demo
+	  locale en_US.UTF-8
+	Flags of /var/lib/postgresql/9.5/demo set as -------------e-C
+	  port   5432
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+Pokretanje novog clustera:
+
+	sudo pg_ctlcluster 9.5 demo start
+	pg_lsclusters
+
+Cluster je sada online:
+
+	Ver Cluster Port Status Owner    Data directory
+	9.5 demo    5432 online postgres /var/lib/postgresql/9.5/demo
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+Stvaranje novog superusera i baze:
+
+	sudo su - postgres -c 'createuser -sP limo'
+	createdb limo
+	psql -l
+
+Defaultne baze: postgres, template0/1
+
+	   Name    |  Owner   | Encoding |   Access privileges
+	-----------+----------+----------+-----------------------
+	 limo      | limo     | UTF8     |
+	 postgres  | postgres | UTF8     |
+	 template0 | postgres | UTF8     | =c/postgres          +
+	           |          |          | postgres=CTc/postgres
+	 template1 | postgres | UTF8     | =c/postgres          +
+	           |          |          | postgres=CTc/postgres
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+Stvaranje nove sheme, tablespacea i tablice:
+
+	CREATE SCHEMA demo;
+
+	CREATE TABLESPACE laptop LOCATION '/mnt/hgfs/Shared/Tablespace';
+	CREATE TABLE demo.poruka(msg text) TABLESPACE laptop;
+						</script>
+					</section>
+				</section>
+
+				<section>
+					<section data-markdown>
+						<script type="text/template">
+# Initial setup
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+### Najosnovniji setup:
+
+* postgresql.conf
+* pg_hba.conf
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+### postgresql.conf
+
+			listen_addresses = '127.0.0.1'
+			port             = 5432
+
+			shared_buffers = 512MB
+
+			log_min_duration_statement = 250
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+### pg_hba.conf
+
+			local   all   postgres               peer
+			local   all   limo                   peer
+			host    all   all        0.0.0.0/0   md5
+						</script>
+					</section>
+				</section>
+
+				<section>
+					<section data-markdown>
+						<script type="text/template">
+# Ispod haube - MVCC
+						</script>
+					</section>
+
+					<section data-markdown data-transition="none">
+						<script type="text/template">
+# MVCC
+
+Insert poruke:
+
+	INSERT INTO demo.poruka VALUES('Dobar dan!');
+
+[![](img/mvcc-insert.png)](http://www.postgresql.org/docs/9.5/static/storage-page-layout.html)
+						</script>
+					</section>
+
+					<section data-markdown data-transition="none">
+						<script type="text/template">
+# MVCC
+
+Update poruke:
+
+	UPDATE demo.poruka SET msg = 'Doviđenja!';
+
+[![](img/mvcc-update.png)](http://www.postgresql.org/docs/9.5/static/storage-page-layout.html)
+						</script>
+					</section>
+
+					<section data-markdown data-transition="none">
+						<script type="text/template">
+# MVCC
+						</script>
+					</section>
+
+					<section data-markdown data-transition="none">
+						<script type="text/template">
+# MVCC
+
+## Don't lock on read!
+						</script>
+					</section>
+
+					<section data-markdown data-transition="none">
+						<script type="text/template">
+# MVCC
+
+## Don't lock on write!
+						</script>
+					</section>
+
+					<section data-markdown data-transition="none">
+						<script type="text/template">
+# MVCC
+
+## Never block!
+						</script>
+					</section>
+
+					<section>
+						<table>
+							<thead>
+								<tr>
+									<th>Isolation Level</th>
+									<th>Dirty Read</th>
+									<th>Nonrepeatable Read</th>
+									<th>Phantom Read</th>
+									<th>Serialization Anomaly</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Read uncomm.</td>
+									<td><span style="color: pink;">Maybe</span></td>
+									<td><span style="color: pink;">Maybe</span></td>
+									<td><span style="color: pink;">Maybe</span></td>
+									<td><span style="color: pink;">Maybe</span></td>
+								</tr>
+								<tr>
+									<td>Read committed</td>
+									<td><span style="color: limegreen;">No</span></td>
+									<td><span style="color: pink;">Maybe</span></td>
+									<td><span style="color: pink;">Maybe</span></td>
+									<td><span style="color: pink;">Maybe</span></td>
+								</tr>
+								<tr>
+									<td>Repeatable read</td>
+									<td><span style="color: limegreen;">No</span></td>
+									<td><span style="color: limegreen;">No</span></td>
+									<td><span style="color: pink;">Maybe</span></td>
+									<td><span style="color: pink;">Maybe</span></td>
+								</tr>
+								<tr>
+									<td>Serializable</td>
+									<td style="color: limegreen;">No</td>
+									<td style="color: limegreen;">No</td>
+									<td style="color: limegreen;">No</td>
+									<td style="color: limegreen;">No</td>
+								</tr>
+							</tbody>
+						</table>
+					</section>
+
+					<section data-transition="none">
+						<table>
+							<thead>
+								<tr>
+									<th><a href="http://www.postgresql.org/docs/9.5/static/transaction-iso.html">Isolation Level</a></th>
+									<th>Dirty Read</th>
+									<th>Nonrepeatable Read</th>
+									<th>Phantom Read</th>
+									<th>Serialization Anomaly</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td>Read uncomm.</td>
+									<td><span style="color: teal;">NO!</span></td>
+									<td><span style="color: pink;">Maybe</span></td>
+									<td><span style="color: pink;">Maybe</span></td>
+									<td><span style="color: pink;">Maybe</span></td>
+								</tr>
+								<tr>
+									<td>Read committed</td>
+									<td><span style="color: limegreen;">No</span></td>
+									<td><span style="color: pink;">Maybe</span></td>
+									<td><span style="color: pink;">Maybe</span></td>
+									<td><span style="color: pink;">Maybe</span></td>
+								</tr>
+								<tr>
+									<td>Repeatable read</td>
+									<td><span style="color: limegreen;">No</span></td>
+									<td><span style="color: limegreen;">No</span></td>
+									<td><span style="color: teal;">NO!</span></td>
+									<td><span style="color: pink;">Maybe</span></td>
+								</tr>
+								<tr>
+									<td>Serializable</td>
+									<td style="color: limegreen;">No</td>
+									<td style="color: limegreen;">No</td>
+									<td style="color: limegreen;">No</td>
+									<td style="color: limegreen;">No</td>
+								</tr>
+							</tbody>
+						</table>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+[Demonstracija](https://wiki.postgresql.org/wiki/SSI):
+
+	BEGIN;
+	CREATE TABLE demo.ovca(grla int);
+
+	INSERT INTO demo.ovca VALUES(1);
+	INSERT INTO demo.ovca VALUES(2);
+
+	-- ...
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+[Demonstracija](https://wiki.postgresql.org/wiki/SSI):
+
+	BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+	SELECT SUM(grla) FROM demo.ovca;
+
+	-- Commit u drugom sessionu koji mijenja tablicu ...
+
+	SELECT SUM(grla) FROM demo.ovca;
+						</script>
+					</section>
+				</section>
+
+				<section>
+					<section data-markdown>
+						<script type="text/template">
+## Transactional DDL
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+Sigurnost pri migracijama:
+
+	BEGIN;
+	CREATE TABLE demo."Nova Tablica"("Moje Polje" text);
+
+	INSERT INTO demo."Nova Tablica" VALUES('Pozdrav!');
+	INSERT INTO demo."Nova Tablica" VALUES('Još jednom!');
+
+	SAVEPOINT s1;
+	CREATE TABLE demo."Nova Tablica"("Moje Polje" text);
+
+	-- dogodila se greška, duplicate table
+	ROLLBACK TO s1;
+	COMMIT;
+						</script>
+					</section>
+				</section>
+
+				<section>
+					<section data-markdown>
+						<script type="text/template">
+# ORDBMS
+
+(Object-Relational Database Management System)
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+# ORDBMS
+
+* Tipovi
+* Objekti
+* Inheritance
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+# Tipovi (demo)
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+### Tipovi (primjer)
+	SET search_path = demo;
+
+	CREATE TYPE boja AS ENUM('pik', 'herc', 'karo', 'tref');
+	CREATE DOMAIN snaga AS text CHECK(VALUE ~ '^[23456789XJQKA]$');
+
+	CREATE TYPE karta AS(boja boja, snaga snaga);
+	CREATE TYPE ruka AS(karte karta[]);
+
+	CREATE TABLE stol(ruka ruka);
+	INSERT INTO stol VALUES('("{""(pik,7)"",""(tref,A)""}")');
+
+	TABLE stol;
+						</script>
+					</section>
+				</section>
+
+				<section>
+					<section data-markdown>
+						<script type="text/template">
+# Inheritance (demo)
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+### Inheritance (primjer)
+
+	CREATE TABLE pacijent(ime text);
+
+	CREATE TABLE pacijent_hr(ime text, oib varchar(11))
+		INHERITS(pacijent);
+
+	CREATE TABLE pacijent_se(ime text, pn varchar(13))
+		INHERITS(pacijent);
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+### Inheritance (primjer)
+
+	INSERT INTO pacijent VALUES('John Doe');
+
+	INSERT INTO pacijent_hr VALUES
+	('Marko Elezović', '12345678901'),
+	('Domagoj Smoljanović', '12345678902');
+
+	INSERT INTO pacijent_se VALUES
+	('Marcus Elezovic', '123456-7890'),
+	('Domo Smolanus', '123456-7891');
+
+	SELECT tableoid, * FROM pacijent;
+						</script>
+					</section>
+				</section>
+
+				<section>
+					<section data-markdown>
+						<script type="text/template">
+# Advanced features
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+## Security
+	CREATE TABLE profil(ime text PRIMARY KEY, starost int, poruka text);
+
+	INSERT INTO profil VALUES
+	('Ana',   31, NULL),
+	('Ivana', 25, NULL),
+	('Mirna', 24, NULL),
+	('Neva',  40, NULL),
+	('Zoja',   5, NULL);
+
+	CREATE ROLE "Ana";
+	CREATE ROLE "Ivana";
+	CREATE ROLE "Neva";
+	CREATE ROLE korisnik WITH ROLE "Ana", "Ivana", "Neva";
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+### SELECT / UPDATE ON COLUMN
+	GRANT
+	  SELECT(ime, poruka),
+	  UPDATE(poruka)
+	ON TABLE profil TO korisnik;
+
+	SELECT * FROM profil;
+
+	SET ROLE = "Ana";
+	SELECT * FROM profil;
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+### SELECT / UPDATE na koloni
+	SELECT ime, poruka FROM profil;
+
+	UPDATE profil
+	SET poruka = 'Dobar dan, ja sam ' || current_user
+	WHERE ime = current_user;
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+### row level security
+	SET ROLE = limo;
+	ALTER TABLE profil ENABLE ROW LEVEL SECURITY;
+
+	SET ROLE = "Ana";
+	SELECT ime, poruka FROM profil;
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+### row level security
+	SET ROLE = limo;
+
+	CREATE POLICY korisnik_profil ON profil
+	  USING (current_user = ime)
+	  WITH CHECK (current_user = ime AND starost > 35);
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+### row level security
+	SET ROLE = "Ana";
+	UPDATE profil
+	SET poruka = 'Doviđenja, ja sam ' || current_user;
+
+	SET ROLE = "Neva";
+	UPDATE profil
+	SET poruka = 'Doviđenja, ja sam ' || current_user;
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+### row level security
+	SET ROLE = "Ana";
+	UPDATE profil
+	SET poruka = 'Doviđenja, ja sam ' || current_user;
+
+	SET ROLE = "Neva";
+	UPDATE profil
+	SET poruka = 'Doviđenja, ja sam ' || current_user;
+						</script>
+					</section>
+				</section>
+
+				<section>
+					<section data-markdown data-transition="none">
+						<script type="text/template">
+## Sekvence
+	CREATE SEQUENCE ticket_seq;
+	SELECT nextval('ticket_seq');
+						</script>
+					</section>
+
+					<section data-markdown data-transition="none">
+						<script type="text/template">
+## AUTOINCREMENT
+	CREATE TABLE prijava_problema(
+	  ticket int DEFAULT nextval('ticket_seq') PRIMARY KEY,
+	  opis text NOT NULL,
+	  submitted timestamptz NOT NULL DEFAULT current_timestamp
+	);
+
+	INSERT INTO prijava_problema(opis) VALUES('Ne radi desni shift');
+	INSERT INTO prijava_problema(opis) VALUES('Sada ne radi ni lijevi');
+
+	TABLE prijava_problema;
+						</script>
+					</section>
+
+					<section data-markdown data-transition="none">
+						<script type="text/template">
+## AUTOINCREMENT
+	CREATE TABLE prijava_problema(
+	  ticket serial PRIMARY KEY,
+	  opis text NOT NULL,
+	  submitted timestamptz NOT NULL DEFAULT current_timestamp
+	);
+
+	INSERT INTO prijava_problema(opis) VALUES('Ne radi desni shift');
+	INSERT INTO prijava_problema(opis) VALUES('Sada ne radi ni lijevi');
+
+	TABLE prijava_problema;
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+## currval/lastval()
+	INSERT INTO prijava_problema(opis)
+	VALUES('Disk krči, šumi, tutnji...');
+
+	SELECT curval('ticket_seq');
+	SELECT lastval();
+
+ Txn based (safe!)
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+## RETURNING - bolji način
+	INSERT INTO prijava_problema(opis)
+	VALUES('Disk krči, šumi, tutnji...')
+	RETURNING ticket;
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+##  RETURNING radi na IUDima
+	DELETE FROM prijava_problema
+	WHERE ticket = (SELECT MIN(ticket) FROM prijava_problema)
+	RETURNING *;
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+##  RETURNING + WITH = atomičnost
+	WITH obrada AS (
+		DELETE FROM prijava_problema
+		WHERE ticket = (SELECT MIN(ticket) FROM prijava_problema)
+		RETURNING *
+	)
+	SELECT * FROM obrada;
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+##  RETURNING + WITH = atomičnost
+	CREATE TABLE rjeseni_problemi(
+	  ticket int PRIMARY KEY,
+	  opis text NOT NULL,
+	  submitted timestamptz NOT NULL,
+	  resolved timestamptz NOT NULL DEFAULT current_timestamp
+	);
+
+	WITH obrada AS (
+		DELETE FROM prijava_problema
+		WHERE ticket = (SELECT MIN(ticket) FROM prijava_problema)
+		RETURNING *
+	)
+	INSERT INTO rjeseni_problemi(ticket, opis, submitted)
+	SELECT * FROM obrada;
+						</script>
+					</section>
+				</section>
+
+				<section>
+					<section data-markdown>
+						<script type="text/template">
+### Agregiranje
+	CREATE TABLE racun(id serial, jir uuid);
+	CREATE TABLE stavka(racun_id int, opis text, iznos numeric(2));
+
+	INSERT INTO racun(jir) VALUES('01020304-0506-0708-090a-0b0c0d0e0f10');
+	INSERT INTO stavka VALUES(lastval(), 'kava s mlijekom', 8.00);
+	INSERT INTO stavka VALUES(lastval(), 'čaj s limunom',   9.00);
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+### Klasični join
+	SELECT *
+	FROM racun r
+	JOIN stavka s ON s.racun_id = r.id;
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+### GROUP BY
+	SELECT r.id, r.jir, COUNT(*)
+	FROM racun r
+	JOIN stavka s ON s.racun_id = r.id
+	GROUP BY r.id, r.jir;
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+### array_agg
+	SELECT r.id, r.jir, array_agg(s)
+	FROM racun r
+	JOIN stavka s ON s.racun_id = r.id
+	GROUP BY r.id, r.jir;
+						</script>
+					</section>
+					<section data-markdown>
+						<script type="text/template">
+### json_agg
+	SELECT r.id, r.jir, json_agg(s.*)
+	FROM racun r
+	JOIN stavka s ON s.racun_id = r.id
+	GROUP BY r.id, r.jir;
+						</script>
+					</section>
+				</section>
+
+				<section>
+					<section data-markdown>
+						<script type="text/template">
+### Generiranje test podataka
+	CREATE TABLE datumi(godina int, mjesec int, dan int, sat int, minuta int, sekunda int);
+
+	INSERT INTO datumi
+	SELECT
+	  EXTRACT(YEAR FROM datum), EXTRACT(MONTH FROM datum), EXTRACT(DAY FROM datum),
+	  EXTRACT(HOUR FROM datum), EXTRACT(MINUTE FROM datum), EXTRACT(SECOND FROM datum)
+	FROM
+	  generate_series('2001-01-01', '2015-12-31', '30 seconds'::interval) AS q(datum);
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+### Manipulacija kolonama: O(?)
+	ALTER TABLE datumi ADD COLUMN mikrosekunde int;
+	ALTER TABLE datumi DROP COLUMN mikrosekunde;
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+O(1)
+
+	ALTER TABLE datumi ADD COLUMN mikrosekunde int;
+
+O(N)
+
+	ALTER TABLE datumi ADD COLUMN mikrosekunde int DEFAULT 0;
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+O(1)
+
+	ALTER TABLE datumi DROP COLUMN mikrosekunde;
+
+Baza će insertati `null`ove do vakumiranja!
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+### No index?
+	SELECT DISTINCT(dan) FROM datumi ORDER BY 1;
+
+	CREATE INDEX idx_datumi_dani ON datumi(dan);
+
+	EXPLAIN ANALYZE
+	SELECT DISTINCT(dan) FROM datumi ORDER BY 1;
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+### Index?
+	SET enable_seqscan = off;
+
+	EXPLAIN ANALYZE
+	SELECT DISTINCT(dan) FROM datumi ORDER BY 1;
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+### Loose-index lookup via RCTE
+	WITH RECURSIVE zadnji_dan(dan) AS (
+	    SELECT MIN(dan)
+	    FROM datumi
+	  UNION ALL
+	    SELECT (
+	      SELECT MIN(dan)
+	      FROM datumi d
+	      WHERE d.dan > z.dan
+	    )
+	    FROM zadnji_dan z
+	)
+	SELECT dan FROM zadnji_dan
+	WHERE dan IS NOT NULL;
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+### Recursive CTE
+	WITH RECURSIVE fib(a, b) as (
+	    VALUES(1, 1)
+	  UNION ALL
+	    SELECT b AS a, a + b AS b FROM fib
+	    WHERE b < 1000
+	)
+	SELECT * FROM fib;
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+### Recursive traversal
+	CREATE TABLE stablo(ime text, otac text);
+	ALTER TABLE stablo ADD PRIMARY KEY(ime);
+	ALTER TABLE stablo ADD FOREIGN KEY(ime) REFERENCES stablo(ime);
+
+	INSERT INTO stablo VALUES
+	('Adam', NULL),
+	('Branko', 'Adam'),
+	('Davor', 'Branko'),
+	('Emil', 'Davor'),
+	('Frane', 'Emil');
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+### Recursive traversal
+	WITH RECURSIVE predak(otac, dijete) AS (
+	  SELECT otac, '{"ime":' || to_json(ime) || '}'
+	  FROM stablo s
+	  WHERE ime = 'Emil'
+	UNION ALL
+	  SELECT s.otac,
+	    '{"ime":' || to_json(ime) || ', "dijete":' || p.dijete || '}'
+	  FROM predak p
+	  JOIN stablo s
+	  ON s.ime = p.otac
+	)
+	SELECT dijete::jsonb
+	FROM predak
+	WHERE otac IS NULL;
+						</script>
+					</section>
+				</section>
+
+				<section>
+					<section data-markdown>
+						<script type="text/template">
+## Dodatak: funkcije
+	CREATE FUNCTION umnozak(int, int) RETURNS int AS
+	$$
+		SELECT $1 * $2;
+	$$
+	LANGUAGE SQL;
+
+	SELECT * FROM umnozak(27, 37);
+	SELECT umnozak(27, 37);
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+Dostupni mnogi jezici kao extenzije
+
+	CREATE FUNCTION make_person(text, text) RETURNS jsonb AS $$
+		String.prototype.initial = function() {
+			return this.charAt(0).toUpperCase();
+		};
+
+		return {
+		  "ime": $1, 
+		  "prezime": $2,
+		  "inicijali": $1.initial() + '. ' + $2.initial() + '.'
+		};
+	$$ LANGUAGE plv8;
+
+	SELECT make_person('Ivan', 'Horvat');						
+						</script>
+					</section>
+				</section>
+
+				<section>
+					<section data-markdown>
+						<script type="text/template">
+# Indexing
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+## Filmovi iz [IMDB](http://www.imdb.com/interfaces) dataseta
+
+	CREATE TABLE filmovi_tmp(title text);
+	CREATE TABLE filmovi AS SELECT DISTINCT(title) FROM movies;
+	DROP TABLE IF EXISTS filmovi_tmp;
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+## Btree
+	CREATE INDEX idx_filmovi_title ON filmovi(title);
+
+	SELECT * FROM filmovi WHERE title = 'Batman';
+	SELECT * FROM filmovi WHERE title ~ '^Bat';
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+## Po receptu (le Naïve)
+	SELECT * FROM filmovi WHERE title ~* 'batman';
+
+	CREATE INDEX idx_filmovi_batman ON filmovi(title) WHERE (title ~* 'batman');
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+## [pg_trgm](http://www.postgresql.org/docs/9.5/static/pgtrgm.html)
+	CREATE INDEX idx_filmovi_title_trgm ON filmovi
+	USING gist(title gist_trgm_ops);
+
+	SELECT title FROM filmovi WHERE title ~ 'Marko';
+	SELECT title FROM filmovi WHERE title ~ ': E';
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+## [pg_trgm](http://www.postgresql.org/docs/9.5/static/pgtrgm.html)
+	SELECT title, similarity(title, 'Ericsson')
+    FROM filmovi
+    WHERE title % 'Ericsson'
+    ORDER BY 2 DESC, 1;
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+# [FTS](http://www.postgresql.org/docs/9.5/static/textsearch.html)
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+## [FTS](http://www.postgresql.org/docs/9.5/static/textsearch.html)
+	ALTER TABLE filmovi ADD COLUMN filmovi_fts tsvector;
+	UPDATE filmovi SET filmovi_fts = to_tsvector('english', title);
+	CREATE INDEX idx_filmovi_fts ON filmovi USING gin(filmovi_fts);
+						</script>
+					</section>
+
+					<section data-markdown data-transition="none">
+						<script type="text/template">
+## [FTS](http://www.postgresql.org/docs/9.5/static/textsearch.html)
+	SELECT title
+	FROM filmovi, to_tsquery('superman | batman | robin') query
+	WHERE query @@ filmovi_fts
+	ORDER BY title LIMIT 100;
+						</script>
+					</section>
+
+					<section data-markdown data-transition="none">
+						<script type="text/template">
+## [FTS](http://www.postgresql.org/docs/9.5/static/textsearch.html)
+	SELECT title, ts_rank_cd(filmovi_fts, query) AS rank
+	FROM filmovi, to_tsquery('superman | batman | robin') query
+	WHERE query @@ filmovi_fts
+	ORDER BY rank DESC LIMIT 100;
+						</script>
+					</section>
+
+					<section data-markdown data-transition="none">
+						<script type="text/template">
+## [FTS](http://www.postgresql.org/docs/9.5/static/textsearch.html)
+	SELECT
+		ts_headline('english', title, query, 'StartSel = <em>, StopSel = </em>') AS title_hili,
+		ts_rank_cd(filmovi_fts, query) AS rank
+	FROM filmovi, to_tsquery('superman | batman | robin') query
+	WHERE query @@ filmovi_fts
+	ORDER BY rank DESC LIMIT 100;
+						</script>
+					</section>
+				</section>
+
+				<section>
+					<section data-markdown>
+						<script type="text/template">
+# More features
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+# MongoDB :)
+
+* unlogged tables
+* full page writes
+* max_wal_size, checkpoint frequency
+* synchronous commit
+* fsync (rizik!)
+* bumpat verzije
+* RAM
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+## Advisory locks
+    SELECT pg_advisory_lock(1337);
+    SELECT pg_advisory_unlock(1337);
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+## Početci PostGISa
+	point    16 bytes       Point on a plane   (x,y)
+	line     32 bytes       Infinite line   {A,B,C}
+	lseg     32 bytes       Finite line segment   ((x1,y1),(x2,y2))
+	box      32 bytes       Rectangular box   ((x1,y1),(x2,y2))
+	path     16+16n bytes   Closed path (similar to polygon)   ((x1,y1),...)
+	path     16+16n bytes   Open path   [(x1,y1),...]
+	polygon  40+16n bytes   Polygon (similar to closed path)   ((x1,y1),...)
+	circle   24 bytes       Circle   <(x,y),r> (center point and radius)
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+## Zanimljiviji tipovi:
+
+* uuid 128 byte
+* xml - no comparison function
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+## JDBC Queries
+* PREPARE / EXECUTE
+* named i unnamed queryies
+* binary transfer argumenata / rezultata
+* simple i extended protocol
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+### [Default contribs](http://www.postgresql.org/docs/9.5/static/contrib.html)
+Najpoznatiji
+* dblink
+* ltree
+* hstore
+* pgcrypto
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+## [LISTEN/NOTIFY](https://github.com/melezov/postgresql-overview-listen-notify)
+* publish / subscribe model
+* vraća [] notifikacija
+* JDBC blokira
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+## [LISTEN/NOTIFY](https://github.com/melezov/postgresql-overview-listen-notify)
+	CREATE TABLE prijava_problema(
+	  ticket SERIAL PRIMARY KEY,
+	  opis text NOT NULL,
+	  submitted timestamptz NOT NULL DEFAULT current_timestamp
+	);
+
+	INSERT INTO prijava_problema(opis) VALUES('Ne radi desni shift');
+	INSERT INTO prijava_problema(opis) VALUES('Sada ne radi ni lijevi');
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+## [LISTEN/NOTIFY](https://github.com/melezov/postgresql-overview-listen-notify)
+	CREATE FUNCTION prijava_problema_notify() RETURNS TRIGGER AS
+	$$
+	BEGIN
+		NOTIFY prijava_problema;
+		RETURN NEW;
+	END;
+	$$ LANGUAGE plpgsql;
+
+	CREATE TRIGGER prijava_problema_iud
+	AFTER INSERT OR UPDATE OR DELETE ON prijava_problema
+	EXECUTE PROCEDURE prijava_problema_notify();
+						</script>
+					</section>
+				</section>
+
+				<section>
+					<section data-markdown>
+						<script type="text/template">
+### Extra: client driver benchmarks
+![](img/dsl-platform-bench-simple.png)
+						</script>
+					</section>
+
+					<section data-markdown>
+						<script type="text/template">
+### Extra: client driver benchmarks
+![](img/dsl-platform-bench-standard.png)
+						</script>
+					</section>
+				</section>
+
+				<section>
+					<section data-markdown>
+						<script type="text/template">
+# Q/A
+						</script>
+					</section>
+				</section>
+			</div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'convex',
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+	</body>
+</html>
